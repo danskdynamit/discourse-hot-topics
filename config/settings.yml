@@ -1,7 +1,7 @@
 plugins:
-  upvote_enabled:
+  hot_topics_enabled:
     default: true
     client: true
-  gravity_rate:
+  hot_topics_gravity_rate:
     default: 1.5
     client: true
