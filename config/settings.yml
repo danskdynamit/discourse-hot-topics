@@ -2,3 +2,6 @@ plugins:
   upvote_enabled:
     default: true
     client: true
+  gravity_rate:
+    default: 1.5
+    client: true

@@ -1,3 +1,4 @@
 en:
   site_settings: 
     upvote_enabled: 'Allow users to vote from the topic list?'
+    gravity_rate: 'Rate at which topics loose their position on the front-page'

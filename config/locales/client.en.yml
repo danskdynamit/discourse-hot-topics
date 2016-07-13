@@ -1,7 +1,3 @@
 en:
   js:
     upvote:
-      upvote: "UPVOTE THIS TOPIC"
-      downvote: "DOWNVOTE THIS TOPIC"
-      login: "LOGIN TO VOTE"
-      see_votes: "See Votes"
