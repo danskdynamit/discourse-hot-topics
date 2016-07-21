@@ -18,7 +18,7 @@ after_initialize do
 	      	likes = self.like_count
 	      	time = ((Time.now - self.created_at) / 1.hour).round
 	      	gravity = SiteSetting.hot_topics_gravity_rate
-          return likes / ((time + 2) ** gravity)
+	        return likes / ((time + 2) ** gravity)
 	      end 
 
 	    end
@@ -39,7 +39,7 @@ after_initialize do
 			SORTABLE_MAPPING["hot"] = "custom_fields.upvote_hot"
 
 		  def list_hot
-		  	result = create_list(:latest, {order: "hot"})
+		  	result = create_list(:latest ,{}, latest_results({order: "hot"}))
 		  end
 		end
 
@@ -49,7 +49,7 @@ after_initialize do
         every 30.minutes
 
         def execute(args)
-          Topic.where(closed: false).find_each do |topic|
+          Topic.where(closed: false, archetype: 'regular').find_each do |topic|
             topic.custom_fields[:upvote_hot] = topic.hot
           end
         end
