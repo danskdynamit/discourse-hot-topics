@@ -14,16 +14,58 @@ after_initialize do
 		require_dependency 'topic'
 	    class ::Topic
 
-	      def hot
-	      	likes = self.like_count
-	      	time = ((Time.now - self.created_at) / 1.hour).round
-	      	gravity = SiteSetting.hot_topics_gravity_rate
-	        return likes / ((time + 2) ** gravity)
-	      end 
+			def hot_likes
+				self.like_count
+			end
+
+			def hot_time
+				((Time.now - self.created_at) / 1.hour)
+			end
+
+			def hot_gravity
+				SiteSetting.hot_topics_gravity_rate
+			end
+
+			def hot_rating
+				self.hot_likes / ((self.hot_time + 2) ** self.hot_gravity)
+			end
+
+			def hot_rating_custom
+				self.custom_fields['upvote_hot']
+			end
 
 	    end
 		Discourse.top_menu_items.push(:hot)
 		Discourse.filters.push(:hot)
+
+		require_dependency 'topic_view_serializer'
+		class ::TopicViewSerializer
+			attributes :hot_likes, :hot_time, :hot_gravity, :hot_rating
+
+			def hot_likes
+				object.topic.hot_likes
+			end
+
+			def hot_time
+				object.topic.hot_time
+			end
+
+			def hot_gravity
+				object.topic.hot_gravity
+			end
+
+			def hot_rating
+				object.topic.hot_rating
+			end
+
+			def hot_rating_custom
+				object.topic.custom_fields['upvote_hot']
+			end
+
+		end
+
+		add_to_serializer(:topic_list_item, :hot_rating) { object.hot_rating }
+		add_to_serializer(:topic_list_item, :hot_rating_custom) { object.hot_rating_custom }
 
 		require_dependency 'list_controller'
 		class ::ListController
@@ -50,7 +92,8 @@ after_initialize do
 
         def execute(args)
           Topic.where(closed: false, archetype: 'regular').find_each do |topic|
-            topic.custom_fields[:upvote_hot] = topic.hot
+            topic.custom_fields['upvote_hot'] = (topic.hot_rating * 1000000000).to_i
+            topic.save
           end
         end
       end
