@@ -8,6 +8,11 @@ register_asset "stylesheets/upvote.scss"
 
 enabled_site_setting :hot_topics_enabled
 
+Discourse.top_menu_items.push(:hot)
+Discourse.anonymous_top_menu_items.push(:hot)
+Discourse.filters.push(:hot)
+Discourse.anonymous_filters.push(:hot)
+
 after_initialize do
 	if SiteSetting.hot_topics_enabled
 
@@ -35,8 +40,6 @@ after_initialize do
 			end
 
 	    end
-		Discourse.top_menu_items.push(:hot)
-		Discourse.filters.push(:hot)
 
 		require_dependency 'topic_view_serializer'
 		class ::TopicViewSerializer
@@ -64,7 +67,9 @@ after_initialize do
 
 		end
 
-		add_to_serializer(:topic_list_item, :hot_rating) { object.hot_rating }
+		add_to_serializer(:topic_list_item, :hot_time) { object.hot_time }
+		add_to_serializer(:topic_list_item, :hot_likes) { object.hot_likes }
+		add_to_serializer(:topic_list_item, :hot_gravity) { object.hot_gravity }
 		add_to_serializer(:topic_list_item, :hot_rating_custom) { object.hot_rating_custom }
 
 		require_dependency 'list_controller'
@@ -100,7 +105,7 @@ after_initialize do
 
     end
 
-		Discourse::Application.routes.append do
+	Discourse::Application.routes.append do
       get "hot" => "list#hot"
     end
 
