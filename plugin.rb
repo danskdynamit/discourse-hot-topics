@@ -76,7 +76,14 @@ after_initialize do
 		class ::ListController
 		  def hot
 		    list_opts = build_topic_list_options
-		    list = TopicQuery.new(nil, list_opts).public_send("list_hot")
+		    page = params[:page].to_i
+		    user = list_target_user
+
+		    list_opts[:order] = "hot"
+		    list_opts[:per_page] = 30
+		    list = TopicQuery.new(user, list_opts).public_send("list_hot")
+		    list.more_topics_url = construct_url_with(:next, list_opts)
+			list.prev_topics_url = construct_url_with(:prev, list_opts)
 		    respond_with_list(list)
 		  end
 		end
@@ -86,13 +93,14 @@ after_initialize do
 			SORTABLE_MAPPING["hot"] = "custom_fields.upvote_hot"
 
 		  def list_hot
-		  	result = create_list(:latest ,{}, latest_results({order: "hot"}))
+		  	topics = create_list(:hot)
 		  end
+
 		end
 
 		module ::Jobs
       
-      class UpvoteHot < Jobs::Scheduled
+      class HotRating < Jobs::Scheduled
         every 30.minutes
 
         def execute(args)
@@ -106,7 +114,7 @@ after_initialize do
     end
 
 	Discourse::Application.routes.append do
-      get "hot" => "list#hot"
+      get "hot" => "list#hot", constraints: { format: /(json|html)/ }
     end
 
     TopicList.preloaded_custom_fields << "upvote_hot" if TopicList.respond_to? :preloaded_custom_fields
