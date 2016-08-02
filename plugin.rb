@@ -72,28 +72,12 @@ after_initialize do
 		add_to_serializer(:topic_list_item, :hot_gravity) { object.hot_gravity }
 		add_to_serializer(:topic_list_item, :hot_rating_custom) { object.hot_rating_custom }
 
-		require_dependency 'list_controller'
-		class ::ListController
-		  def hot
-		    list_opts = build_topic_list_options
-		    page = params[:page].to_i
-		    user = list_target_user
-
-		    list_opts[:order] = "hot"
-		    list_opts[:per_page] = 30
-		    list = TopicQuery.new(user, list_opts).public_send("list_hot")
-		    list.more_topics_url = construct_url_with(:next, list_opts)
-			list.prev_topics_url = construct_url_with(:prev, list_opts)
-		    respond_with_list(list)
-		  end
-		end
-
 		require_dependency 'topic_query'
 		class ::TopicQuery
 			SORTABLE_MAPPING["hot"] = "custom_fields.upvote_hot"
 
 		  def list_hot
-		  	topics = create_list(:hot)
+		  	topics = create_list(:hot, {order: "hot"})
 		  end
 
 		end
@@ -111,10 +95,6 @@ after_initialize do
         end
       end
 
-    end
-
-	Discourse::Application.routes.append do
-      get "hot" => "list#hot", constraints: { format: /(json|html)/ }
     end
 
     TopicList.preloaded_custom_fields << "upvote_hot" if TopicList.respond_to? :preloaded_custom_fields
