@@ -1,4 +1,5 @@
 en:
-  site_settings: 
-    hot_topics_enabled: 'Allow users to vote from the topic list?'
+  site_settings:
+    hot_topics_enabled: 'Enable hot page?'
     hot_topics_gravity_rate: 'Rate at which topics loose their position on the front-page'
+    hot_topics_boost_value: 'Boost value for new topics to give them higher position on hot page'

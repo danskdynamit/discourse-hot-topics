@@ -31,8 +31,12 @@ after_initialize do
 				SiteSetting.hot_topics_gravity_rate
 			end
 
+			def hot_boost
+				SiteSetting.hot_topics_boost_value
+			end
+
 			def hot_rating
-				self.hot_likes / ((self.hot_time + 2) ** self.hot_gravity)
+				(self.hot_likes + self.hot_boost) / ((self.hot_time + 2) ** self.hot_gravity)
 			end
 
 			def hot_rating_custom
@@ -43,7 +47,7 @@ after_initialize do
 
 		require_dependency 'topic_view_serializer'
 		class ::TopicViewSerializer
-			attributes :hot_likes, :hot_time, :hot_gravity, :hot_rating
+			attributes :hot_likes, :hot_time, :hot_gravity, :hot_boost, :hot_rating
 
 			def hot_likes
 				object.topic.hot_likes
@@ -55,6 +59,10 @@ after_initialize do
 
 			def hot_gravity
 				object.topic.hot_gravity
+			end
+
+			def hot_boost
+				object.topic.hot_boost
 			end
 
 			def hot_rating
@@ -70,6 +78,7 @@ after_initialize do
 		add_to_serializer(:topic_list_item, :hot_time) { object.hot_time }
 		add_to_serializer(:topic_list_item, :hot_likes) { object.hot_likes }
 		add_to_serializer(:topic_list_item, :hot_gravity) { object.hot_gravity }
+		add_to_serializer(:topic_list_item, :hot_boost) { object.hot_boost }
 		add_to_serializer(:topic_list_item, :hot_rating_custom) { object.hot_rating_custom }
 
 		require_dependency 'topic_query'
@@ -83,7 +92,7 @@ after_initialize do
 		end
 
 		module ::Jobs
-      
+
       class HotRating < Jobs::Scheduled
         every 30.minutes
 

@@ -5,3 +5,6 @@ plugins:
   hot_topics_gravity_rate:
     default: 1.5
     client: true
+  hot_topics_boost_value:
+    default: 0.1
+    client: true
