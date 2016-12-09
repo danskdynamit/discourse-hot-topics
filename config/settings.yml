@@ -8,3 +8,6 @@ plugins:
   hot_topics_boost_value:
     default: 0.1
     client: true
+  hot_topics_calc_period:
+    default: 30
+    client: true

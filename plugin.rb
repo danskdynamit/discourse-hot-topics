@@ -94,7 +94,7 @@ after_initialize do
 		module ::Jobs
 
       class HotRating < Jobs::Scheduled
-        every 30.minutes
+        every SiteSetting.hot_topics_calc_period.minutes
 
         def execute(args)
           Topic.where(closed: false, archetype: 'regular').find_each do |topic|
