@@ -3,3 +3,4 @@ fr:
     hot_topics_enabled: 'Activer la page Populaire ?'
     hot_topics_gravity_rate: 'Ratio auquel les sujets perdront leur position sur la page Populaire'
     hot_topics_boost_value: 'Coup de pouce donné aux nouveaux sujets pour les situer plus haut sur la page Populaire'
+    hot_topics_calc_period: 'Fréquence (en minutes) de rafraîchissement des sujets populaires. NOTE: requiert un redémarrage.'
