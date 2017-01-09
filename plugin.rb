@@ -20,7 +20,11 @@ after_initialize do
 	    class ::Topic
 
 			def hot_likes
-				self.like_count
+				if SiteSetting.hot_topics_only_op_likes
+					self.first_post.like_count
+				else
+					self.like_count
+				end
 			end
 
 			def hot_time

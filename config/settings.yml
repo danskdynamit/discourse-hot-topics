@@ -11,3 +11,6 @@ plugins:
   hot_topics_calc_period:
     default: 30
     client: true
+  hot_topics_only_op_likes:
+    default: false
+    client: true

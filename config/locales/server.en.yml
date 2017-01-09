@@ -4,3 +4,4 @@ en:
     hot_topics_gravity_rate: 'Rate at which topics loose their position on the front-page.'
     hot_topics_boost_value: 'Boost value for new topics to give them higher position on hot page.'
     hot_topics_calc_period: 'Frequency (in minutes) in which the rating is re-calculated. NOTE: requires restart.'
+    hot_topics_only_op_likes: 'Only use likes from the original post in the calculation.'
